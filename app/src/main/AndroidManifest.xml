@@ -11,6 +11,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
+
         <activity android:name=".LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,8 +19,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUpActivity" >
+
+        <activity android:name=".SignUpActivity"
+            android:parentActivityName=".LoginActivity"
+            android:label="@string/registration_activity_name">
         </activity>
+
+        <activity android:name=".TripListActivity"
+            android:label="@string/trip_list_activity_name">
+        </activity>
+
     </application>
 
 </manifest>

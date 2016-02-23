@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">TripTracker</string>
+    <string name="app_name">Trip Tracker</string>
+    <string name="registration_activity_name">Registration</string>
+    <string name="trip_list_activity_name">Trips</string>
+
     <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>
     <string name="retype_password_hint">Re-type Password</string>
@@ -7,4 +10,7 @@
     <string name="email_hint">Email</string>
     <string name="log_in_button_text">Log In</string>
     <string name="sign_up_button_text">Sign Up</string>
+
+    <string name="default_trip_text">Trip Name</string>
+    <string name="default_trip_creator_text">Created by {USER} on {DATE}</string>
 </resources>

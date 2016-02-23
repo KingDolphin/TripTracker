@@ -1,9 +1,8 @@
 package com.leonmontealegre.triptracker;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,7 +14,7 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.BackendlessCallback;
 import com.backendless.exceptions.BackendlessFault;
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
 
@@ -60,7 +59,8 @@ public class LoginActivity extends ActionBarActivity {
         Backendless.UserService.login(username, Encoder.encodePassword(password), new BackendlessCallback<BackendlessUser>(){
             @Override
             public void handleResponse(BackendlessUser backendlessUser) {
-                Log.d(TAG, "Logged in!");
+                Intent i = new Intent(LoginActivity.this, TripListActivity.class);
+                startActivity(i);
             }
             @Override
             public void handleFault(BackendlessFault fault) {

@@ -1,7 +1,5 @@
 package com.leonmontealegre.triptracker;
 
-import android.util.Log;
-
 public class Encoder {
 
     private Encoder() {}

@@ -1,12 +1,10 @@
 package com.leonmontealegre.triptracker;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
@@ -14,7 +12,7 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.BackendlessCallback;
 import com.backendless.exceptions.BackendlessFault;
 
-public class SignUpActivity extends ActionBarActivity {
+public class SignUpActivity extends AppCompatActivity {
 
     private static final String TAG = "SignUpActivity";
 
@@ -30,6 +28,8 @@ public class SignUpActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         nameField = (EditText)findViewById(R.id.name_input_field);
         userNameField = (EditText)findViewById(R.id.username_input_field);
