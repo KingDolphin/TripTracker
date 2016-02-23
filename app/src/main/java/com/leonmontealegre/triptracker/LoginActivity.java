@@ -8,6 +8,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+import com.backendless.async.callback.BackendlessCallback;
+import com.backendless.exceptions.BackendlessFault;
 
 public class LoginActivity extends ActionBarActivity {
 
@@ -24,6 +30,7 @@ public class LoginActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Backendless.initApp(this, Options.APP_ID, Options.SECRET_KEY, Options.VERSION);
 
         userNameField = (EditText)findViewById(R.id.username_input_field);
         passwordField = (EditText)findViewById(R.id.password_input_field);
@@ -49,10 +56,17 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     private void attemptLogin(String username, String password) {
-        Log.d(TAG, "Attempted login with username : " + username + ", and password : " + password);
-        // check if it works
-        // start intent to load main activity
-
+        Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT).show();
+        Backendless.UserService.login(username, Encoder.encodePassword(password), new BackendlessCallback<BackendlessUser>(){
+            @Override
+            public void handleResponse(BackendlessUser backendlessUser) {
+                Log.d(TAG, "Logged in!");
+            }
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Toast.makeText(LoginActivity.this, fault.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }
