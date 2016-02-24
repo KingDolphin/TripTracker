@@ -58,10 +58,10 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(this, "Password too short! Must be at least " + Options.MIN_PASSWORD_LENGTH + " characters!", Toast.LENGTH_SHORT).show();
         } else {
             BackendlessUser user = new BackendlessUser();
-            user.setProperty(Options.NAME_KEY, nameField.getText().toString());
-            user.setProperty(Options.USERNAME_KEY, userNameField.getText().toString());
-            user.setEmail(emailField.getText().toString());
-            user.setPassword(Encoder.encodePassword(passwordField.getText().toString()));
+            user.setProperty(User.NAME_KEY, name);
+            user.setProperty(User.USERNAME_KEY, username);
+            user.setEmail(email);
+            user.setPassword(Encoder.encodePassword(password));
 
             Backendless.UserService.register(user, new BackendlessCallback<BackendlessUser>() {
                 @Override

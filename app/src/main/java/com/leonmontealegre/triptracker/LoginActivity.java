@@ -29,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getSupportActionBar().hide();
         Backendless.initApp(this, Options.APP_ID, Options.SECRET_KEY, Options.VERSION);
 
         userNameField = (EditText)findViewById(R.id.username_input_field);
@@ -59,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         Backendless.UserService.login(username, Encoder.encodePassword(password), new BackendlessCallback<BackendlessUser>(){
             @Override
             public void handleResponse(BackendlessUser backendlessUser) {
+                User.login(backendlessUser);
                 Intent i = new Intent(LoginActivity.this, TripListActivity.class);
                 startActivity(i);
             }

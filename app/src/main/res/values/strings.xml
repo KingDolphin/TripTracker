@@ -9,8 +9,16 @@
     <string name="name_hint">Name</string>
     <string name="email_hint">Email</string>
     <string name="log_in_button_text">Log In</string>
-    <string name="sign_up_button_text">Sign Up</string>
+    <string name="sign_up_button_text">Register</string>
+    <string name="forgot_password_button_text">Password?</string>
 
     <string name="default_trip_text">Trip Name</string>
     <string name="default_trip_creator_text">Created by {USER} on {DATE}</string>
+
+    <string name="edit_trip_text">Edit</string>
+    <string name="delete_trip_text">Delete</string>
+
+    <string name="help_text">Help</string>
+    <string name="settings_text">Settings</string>
+    <string name="logout_text">Logout</string>
 </resources>

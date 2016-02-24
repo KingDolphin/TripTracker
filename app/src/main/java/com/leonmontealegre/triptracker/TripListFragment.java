@@ -1,17 +1,13 @@
 package com.leonmontealegre.triptracker;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -29,8 +25,7 @@ public class TripListFragment extends ListFragment {
         View v = super.onCreateView(inflater, parent, savedInstanceState);
 
         ArrayList<Trip> trips = new ArrayList<>();
-        for (int i = 0; i < 10; i++)
-            trips.add(new Trip());
+
 
         TripListAdapter adapter = new TripListAdapter(trips);
         setListAdapter(adapter);
@@ -71,13 +66,22 @@ public class TripListFragment extends ListFragment {
 
             TextView creatorTextView = (TextView)convertView.findViewById(R.id.trip_creator_text);
             String defaultText = getResources().getText(R.string.default_trip_creator_text).toString();
-            creatorTextView.setText(defaultText.replace("{USER}", trip.getCreator()).replace("{DATE}", trip.getCreationDate()));
+            creatorTextView.setText(defaultText.replace("{USER}", trip.getCreator()).replace("{DATE}", trip.getStartDate()));
 
-            ImageButton editButton = (ImageButton)convertView.findViewById(R.id.trip_edit_button);
+            final ImageButton editButton = (ImageButton)convertView.findViewById(R.id.trip_edit_button);
             editButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "Edited trip at index " + position);
+                    PopupMenu popupMenu = new PopupMenu(TripListFragment.this.getActivity(), editButton);
+                    popupMenu.getMenuInflater().inflate(R.menu.menu_popup_edit_trip, popupMenu.getMenu());
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            Log.d(TAG, "Item : " + item.getTitle() + " clicked on trip at position : " + position);
+                            return true;
+                        }
+                    });
+                    popupMenu.show();
                 }
             });
 
