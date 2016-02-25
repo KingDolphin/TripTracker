@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/editTrip"
+        android:id="@+id/menu_item_edit_trip"
         android:title="@string/edit_trip_text" />
 
     <item
-        android:id="@+id/deleteTrip"
+        android:id="@+id/menu_item_delete_trip"
         android:title="@string/delete_trip_text" />
 
 </menu>

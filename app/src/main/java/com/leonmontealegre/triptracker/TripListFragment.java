@@ -13,7 +13,13 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.backendless.Backendless;
+import com.backendless.BackendlessCollection;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class TripListFragment extends ListFragment {
@@ -22,17 +28,23 @@ public class TripListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, parent, savedInstanceState);
+        final View v = super.onCreateView(inflater, parent, savedInstanceState);
 
-        ArrayList<Trip> trips = new ArrayList<>();
+        Backendless.Data.of(Trip.class).find(new AsyncCallback<BackendlessCollection<Trip>>() {
+            @Override
+            public void handleResponse(BackendlessCollection<Trip> trips) {
+                TripListAdapter adapter = new TripListAdapter(trips.getCurrentPage());
+                setListAdapter(adapter);
+                setHasOptionsMenu(true);
 
-
-        TripListAdapter adapter = new TripListAdapter(trips);
-        setListAdapter(adapter);
-        setHasOptionsMenu(true);
-
-        ListView listView = (ListView)v.findViewById(android.R.id.list);
-        registerForContextMenu(listView);
+                ListView listView = (ListView)v.findViewById(android.R.id.list);
+                registerForContextMenu(listView);
+            }
+            @Override
+            public void handleFault(BackendlessFault backendlessFault) {
+                System.out.println("Server reported an error - " + backendlessFault.getMessage());
+            }
+        });
 
         return v;
     }
@@ -62,28 +74,39 @@ public class TripListFragment extends ListFragment {
             Trip trip = getItem(position);
 
             TextView nameTextView = (TextView)convertView.findViewById(R.id.trip_name_text);
-            nameTextView.setText(trip.getName());
+            nameTextView.setText(trip.name);
 
             TextView creatorTextView = (TextView)convertView.findViewById(R.id.trip_creator_text);
             String defaultText = getResources().getText(R.string.default_trip_creator_text).toString();
-            creatorTextView.setText(defaultText.replace("{USER}", trip.getCreator()).replace("{DATE}", trip.getStartDate()));
+            creatorTextView.setText(defaultText.replace("{USER}", trip.creatorName).replace("{DATE}", trip.startDate.toString()));
 
             final ImageButton editButton = (ImageButton)convertView.findViewById(R.id.trip_edit_button);
-            editButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "Edited trip at index " + position);
-                    PopupMenu popupMenu = new PopupMenu(TripListFragment.this.getActivity(), editButton);
-                    popupMenu.getMenuInflater().inflate(R.menu.menu_popup_edit_trip, popupMenu.getMenu());
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        public boolean onMenuItemClick(MenuItem item) {
-                            Log.d(TAG, "Item : " + item.getTitle() + " clicked on trip at position : " + position);
-                            return true;
-                        }
-                    });
-                    popupMenu.show();
-                }
-            });
+            if (User.getUsername().equals(trip.creatorName)) {
+                editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PopupMenu popupMenu = new PopupMenu(TripListFragment.this.getActivity(), editButton);
+                        popupMenu.getMenuInflater().inflate(R.menu.menu_popup_edit_trip, popupMenu.getMenu());
+                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            public boolean onMenuItemClick(MenuItem item) {
+                                switch (item.getItemId()) {
+                                    case R.id.menu_item_edit_trip:
+                                        Log.d(TAG, "Selected edit trip");
+                                        return true;
+                                    case R.id.menu_item_delete_trip:
+                                        Log.d(TAG, "Selected delete trip");
+                                        return true;
+                                    default:
+                                        return false;
+                                }
+                            }
+                        });
+                        popupMenu.show();
+                    }
+                });
+            } else {
+                editButton.setVisibility(View.GONE);
+            }
 
             return convertView;
         }
