@@ -47,6 +47,7 @@ public class LoadingCallback<T> implements AsyncCallback<T> {
         else
             Toast.makeText(context, "Server reported an error – " + fault.getMessage(), Toast.LENGTH_SHORT).show();
         progressDialog.dismiss();
+        //jkh
     }
 
     private void alert(String title, String message) {
