@@ -10,7 +10,6 @@
     android:background="@color/colorPrimaryLight"
     tools:context=".LoginActivity">
 
-
     <!-- USERNAME -->
 
     <ImageView
