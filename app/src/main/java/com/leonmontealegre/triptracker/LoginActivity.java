@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 
         userNameField = (EditText)findViewById(R.id.username_input_field);
         passwordField = (EditText)findViewById(R.id.password_input_field);
+        passwordField.setText("");
 
         loginButton = (Button)findViewById(R.id.login_button);
 

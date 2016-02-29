@@ -19,7 +19,12 @@ public class Trip {
     }
 
     public Trip() {
-        this.creatorName = "Unknown";
+        this("New Trip", User.getUsername(), "A new trip.", new Date(), new Date());
+    }
+
+    @Override
+    public String toString() {
+        return name + ", " + description;
     }
 
 }

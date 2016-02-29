@@ -1,16 +1,6 @@
 package com.leonmontealegre.triptracker;
 
-import com.backendless.Backendless;
-import com.backendless.BackendlessCollection;
 import com.backendless.BackendlessUser;
-import com.backendless.async.callback.AsyncCallback;
-import com.backendless.exceptions.BackendlessFault;
-import com.backendless.persistence.BackendlessDataQuery;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 public class User {
 
@@ -42,19 +32,6 @@ public class User {
         currentUser = null;
     }
 
-    public static void addTrip(Trip trip) {
-        Backendless.Data.of(Trip.class).save(trip, new AsyncCallback<Trip>() {
-            @Override
-            public void handleResponse(Trip response) {
-                System.out.println("saved trip success");
-            }
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                System.out.println("saved trip failed : " + fault.getMessage());
-            }
-        });
-    }
-
     public static String getName() {
         if (currentUser != null)
             return currentUser.name;
@@ -71,6 +48,10 @@ public class User {
         if (currentUser != null)
             return currentUser.email;
         return "";
+    }
+
+    public static String getUserID() {
+        return currentUser.user.getUserId();
     }
 
 }

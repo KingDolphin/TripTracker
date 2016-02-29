@@ -25,7 +25,8 @@
         android:padding="8dp"
         android:id="@+id/username_icon"
         android:background="#dddddd"
-        android:src="@android:drawable/ic_dialog_dialer" />
+        android:src="@drawable/ic_supervisor_account_black_24dp"
+        android:tint="#eeeeee" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -50,7 +51,8 @@
         android:padding="8dp"
         android:id="@+id/password_icon"
         android:background="#dddddd"
-        android:src="@android:drawable/ic_lock_idle_lock" />
+        android:src="@android:drawable/ic_lock_idle_lock"
+        android:tint="#eeeeee" />
 
     <EditText
         android:layout_width="wrap_content"
