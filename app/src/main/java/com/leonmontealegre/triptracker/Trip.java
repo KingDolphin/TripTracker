@@ -9,17 +9,19 @@ public class Trip {
     public String description;
     public Date startDate;
     public Date endDate;
+    public boolean isPublic;
 
-    public Trip(String name, String creatorName, String description, Date startDate, Date endDate) {
+    public Trip(String name, String creatorName, String description, Date startDate, Date endDate, boolean isPublic) {
         this.name = name;
         this.creatorName = creatorName;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.isPublic = isPublic;
     }
 
     public Trip() {
-        this("New Trip", User.getUsername(), "A new trip.", new Date(), new Date());
+        this("New Trip", User.getUsername(), "A new trip.", new Date(), new Date(), false);
     }
 
     @Override

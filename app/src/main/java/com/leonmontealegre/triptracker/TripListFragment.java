@@ -23,6 +23,7 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -47,57 +48,43 @@ public class TripListFragment extends ListFragment {
             }
         });
 
-        BackendlessDataQuery query = new BackendlessDataQuery();
-        query.setWhereClause("ownerId='"+User.getUserID()+"'");
-        Backendless.Data.of(Trip.class).find(query, new AsyncCallback<BackendlessCollection<Trip>>() {
-            @Override
-            public void handleResponse(BackendlessCollection<Trip> response) {
-                if (response.getTotalObjects() > 0) {
-                    List<Trip> page = response.getCurrentPage();
-                    Log.d(TAG, "" + page.get(0).name);
-                } else
-                    Log.d(TAG, "No trips :(");
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                Log.d(TAG, "y u fault");
-            }
-        });
-
         return v;
     }
 
     private void refreshTrips() {
-        Backendless.Data.of(Trip.class).find(new LoadingCallback<>(getActivity(), "Creating...", new LoadingCallback.OnResponseListener<BackendlessCollection<Trip>>() {
+        BackendlessDataQuery query = new BackendlessDataQuery();
+        query.setWhereClause("isPublic = True OR ownerId='"+User.getUserID()+"'");
+        Backendless.Data.of(Trip.class).find(query, new LoadingCallback<BackendlessCollection<Trip>>(this.getActivity(), "Loading...") {
             @Override
-            public void onResponse(BackendlessCollection<Trip> trips) {
-                TripListAdapter adapter = new TripListAdapter(trips.getCurrentPage());
+            public void handleResponse(BackendlessCollection<Trip> trips) {
+                super.handleResponse(trips);
+                TripListAdapter adapter = new TripListAdapter(trips.getTotalObjects() > 0 ? trips.getCurrentPage() : new ArrayList<Trip>());
                 setListAdapter(adapter);
                 setHasOptionsMenu(true);
             }
-        }));
+        });
     }
 
     public void addTrip(Trip trip) {
-        Log.d(TAG, "addTrip: yo");
-        Backendless.Data.of(Trip.class).save(trip, new LoadingCallback<>(getActivity(), "Creating...", new LoadingCallback.OnResponseListener<Trip>() {
+        Backendless.Data.of(Trip.class).save(trip, new LoadingCallback<Trip>(getActivity(), "Creating...") {
             @Override
-            public void onResponse(Trip response) {
+            public void handleResponse(Trip response) {
+                super.handleResponse(response);
                 Toast.makeText(getActivity(), "Successfully saved!", Toast.LENGTH_SHORT).show();
                 refreshTrips();
             }
-        }));
+        });
     }
 
     public void removeTrip(Trip trip) {
-        Backendless.Data.of(Trip.class).remove(trip, new LoadingCallback<>(getActivity(), "Removing...", new LoadingCallback.OnResponseListener<Long>() {
+        Backendless.Data.of(Trip.class).remove(trip, new LoadingCallback<Long>(getActivity(), "Removing...") {
             @Override
-            public void onResponse(Long response) {
+            public void handleResponse(Long response) {
+                super.handleResponse(response);
                 Toast.makeText(getActivity(), "Removed!", Toast.LENGTH_SHORT).show();
                 refreshTrips();
             }
-        }));
+        });
     }
 
     private void deleteTrip(final Trip trip) {

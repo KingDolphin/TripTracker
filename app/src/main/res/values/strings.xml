@@ -12,6 +12,9 @@
     <string name="sign_up_button_text">Register</string>
     <string name="forgot_password_button_text">Password?</string>
 
+    <string name="trip_name_hint">Trip Name</string>
+    <string name="trip_desc_hint">Description</string>
+
     <string name="default_trip_text">Trip Name</string>
     <string name="default_trip_creator_text">Created by {USER} on {DATE}</string>
 
@@ -21,4 +24,12 @@
     <string name="help_text">Help</string>
     <string name="settings_text">Settings</string>
     <string name="logout_text">Logout</string>
+
+    <string name="icon_desc">The icon for the app</string>
+    <string name="name_icon_desc">The icon for name</string>
+    <string name="username_icon_desc">The icon for username</string>
+    <string name="password_icon_desc">The icon for password</string>
+    <string name="email_icon_desc">The icon for email</string>
+    <string name="trip_icon_desc">The icon for a trip</string>
+    <string name="trip_dropdown_icon_desc">The icon for the trip drop down</string>
 </resources>

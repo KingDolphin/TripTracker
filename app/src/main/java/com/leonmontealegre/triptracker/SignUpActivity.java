@@ -9,8 +9,6 @@ import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
-import com.backendless.async.callback.BackendlessCallback;
-import com.backendless.exceptions.BackendlessFault;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -63,16 +61,12 @@ public class SignUpActivity extends AppCompatActivity {
             user.setEmail(email);
             user.setPassword(Encoder.encodePassword(password));
 
-            Backendless.UserService.register(user, new BackendlessCallback<BackendlessUser>() {
+            Backendless.UserService.register(user, new LoadingCallback<BackendlessUser>(this, "Registering...") {
                 @Override
                 public void handleResponse(BackendlessUser backendlessUser) {
+                    super.handleResponse(backendlessUser);
                     Toast.makeText(SignUpActivity.this, backendlessUser.getEmail() + " successfully registered!", Toast.LENGTH_SHORT).show();
                     SignUpActivity.this.finish();
-                }
-
-                @Override
-                public void handleFault(BackendlessFault fault) {
-                    Toast.makeText(SignUpActivity.this, fault.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
