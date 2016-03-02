@@ -29,6 +29,11 @@
             android:label="@string/trip_list_activity_name">
         </activity>
 
+        <activity android:name=".EditTripActivity"
+            android:parentActivityName=".TripListActivity"
+            android:label="@string/edit_trip_activity_name">
+        </activity>
+
     </application>
 
 </manifest>

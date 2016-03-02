@@ -2,6 +2,7 @@
     <string name="app_name">Trip Tracker</string>
     <string name="registration_activity_name">Registration</string>
     <string name="trip_list_activity_name">Trips</string>
+    <string name="edit_trip_activity_name">Edit Trip</string>
 
     <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>
@@ -17,6 +18,10 @@
 
     <string name="default_trip_text">Trip Name</string>
     <string name="default_trip_creator_text">Created by {USER} on {DATE}</string>
+    <string name="default_date_text">00/00/0000</string>
+
+    <string name="start_date_text">Start Date</string>
+    <string name="end_date_text">End Date</string>
 
     <string name="edit_trip_text">Edit</string>
     <string name="delete_trip_text">Delete</string>

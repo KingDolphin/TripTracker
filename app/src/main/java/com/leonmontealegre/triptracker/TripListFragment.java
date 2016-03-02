@@ -1,6 +1,7 @@
 package com.leonmontealegre.triptracker;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ListFragment;
@@ -149,7 +150,8 @@ public class TripListFragment extends ListFragment {
                             public boolean onMenuItemClick(MenuItem item) {
                                 switch (item.getItemId()) {
                                     case R.id.menu_item_edit_trip:
-                                        Log.d(TAG, "Selected edit trip");
+                                        Intent i = new Intent(TripListFragment.this.getActivity(), EditTripActivity.class);
+                                        startActivity(i);
                                         return true;
                                     case R.id.menu_item_delete_trip:
                                         deleteTrip(trip);
