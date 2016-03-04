@@ -4,6 +4,13 @@ import java.util.Date;
 
 public class Trip {
 
+    public static final String NAME_EXTRA = "TRIP_NAME";
+    public static final String CREATOR_EXTRA = "TRIP_CREATOR_NAME";
+    public static final String DESC_EXTRA = "TRIP_DESCRIPTION";
+    public static final String START_DATE_EXTRA = "TRIP_START_DATE";
+    public static final String END_DATE_EXTRA = "TRIP_END_DATE";
+    public static final String IS_PUBLIC_EXTRA = "TRIP_IS_PUBLIC";
+
     public String name;
     public String creatorName;
     public String description;

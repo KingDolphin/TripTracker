@@ -3,150 +3,193 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingStart="@dimen/activity_horizontal_margin"
-    android:paddingEnd="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/colorPrimaryLight"
     tools:context=".EditTripActivity">
 
-        <ScrollView
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <!-- NAME -->
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:padding="8dp"
+            android:id="@+id/trip_name_icon"
+            android:background="#dddddd"
+            android:src="@drawable/ic_public_black_24dp"
+            android:tint="#999999"
+            android:contentDescription="@string/name_icon_desc" />
+
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/scrollView"
+            android:layout_alignBottom="@+id/trip_name_icon"
+            android:layout_alignTop="@+id/trip_name_icon"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/trip_name_icon"
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"
+            android:id="@+id/trip_name_input_field"
+            android:background="#ffffff"
+            android:hint="@string/trip_name_hint"
+            android:singleLine="true" />
+
+
+        <!-- DESCRIPTION -->
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_below="@+id/trip_name_icon"
+            android:layout_alignEnd="@+id/trip_name_icon"
+            android:layout_alignStart="@+id/trip_name_icon"
+            android:layout_marginTop="32dp"
+            android:padding="8dp"
+            android:id="@+id/trip_desc_icon"
+            android:background="#dddddd"
+            android:src="@drawable/ic_create_black_24dp"
+            android:tint="#999999"
+            android:contentDescription="@string/username_icon_desc" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/trip_desc_icon"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/trip_desc_icon"
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="14dp"
+            android:id="@+id/trip_desc_input_field"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:background="#ffffff"
+            android:lines="6"
+            android:hint="@string/trip_desc_hint" />
+
+
+        <!-- DATES -->
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/trip_desc_input_field"
+            android:layout_marginTop="32dp"
+            android:id="@+id/date_names">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="1dp"
+                android:padding="4dp"
+                android:text="@string/start_date_text"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:background="#ffffff" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="1dp"
+                android:padding="4dp"
+                android:text="@string/end_date_text"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:background="#ffffff" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/date_names"
+            android:id="@+id/date_buttons"
+            style="?android:attr/buttonBarStyle">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="1dp"
+                android:id="@+id/start_date_button"
+                android:text="@string/default_date_text"
+                android:background="#dddddd"
+                android:textColor="#444444"
+                style="?android:attr/buttonBarButtonStyle" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="1dp"
+                android:id="@+id/end_date_button"
+                android:text="@string/default_date_text"
+                android:background="#dddddd"
+                android:textColor="#444444"
+                style="?android:attr/buttonBarButtonStyle" />
+
+        </LinearLayout>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/date_buttons"
+            android:layout_marginTop="12dp"
             android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignEnd="@+id/trip_desc_input_field"
-            android:layout_alignParentTop="true" >
+            android:id="@+id/is_public_checkbox"
+            android:padding="8dp"
+            android:textSize="18sp"
+            android:text="@string/is_public_text" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <!-- NAME -->
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="20dp"
-                        android:padding="8dp"
-                        android:id="@+id/trip_name_icon"
-                        android:background="#dddddd"
-                        android:src="@drawable/ic_public_black_24dp"
-                        android:tint="#999999"
-                        android:contentDescription="@string/name_icon_desc" />
-
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/trip_name_icon"
-                        android:layout_alignTop="@+id/trip_name_icon"
-                        android:layout_alignParentEnd="true"
-                        android:layout_toEndOf="@+id/trip_name_icon"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="0dp"
-                        android:id="@+id/trip_name_input_field"
-                        android:background="#ffffff"
-                        android:hint="@string/trip_name_hint"
-                        android:singleLine="true" />
+    </RelativeLayout>
 
 
-                    <!-- DESCRIPTION -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#eeeeee"
+        android:id="@+id/save_cancel_buttons"
+        style="?android:attr/buttonBarStyle">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:layout_below="@+id/trip_name_icon"
-                        android:layout_alignEnd="@+id/trip_name_icon"
-                        android:layout_alignStart="@+id/trip_name_icon"
-                        android:layout_marginTop="32dp"
-                        android:padding="8dp"
-                        android:id="@+id/trip_desc_icon"
-                        android:background="#dddddd"
-                        android:src="@drawable/ic_create_black_24dp"
-                        android:tint="#999999"
-                        android:contentDescription="@string/username_icon_desc" />
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="1dp"
+            android:id="@+id/cancel_trip_button"
+            android:src="@drawable/abc_ic_clear_mtrl_alpha"
+            android:background="#00000000"
+            android:tint="#000000"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/cancel_trip_icon_desc"
+            style="?android:attr/buttonBarButtonStyle" />
 
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/trip_desc_icon"
-                        android:layout_alignParentEnd="true"
-                        android:layout_toEndOf="@+id/trip_desc_icon"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="0dp"
-                        android:paddingTop="12dp"
-                        android:paddingBottom="14dp"
-                        android:id="@+id/trip_desc_input_field"
-                        android:inputType="textMultiLine"
-                        android:background="#ffffff"
-                        android:hint="@string/trip_desc_hint" />
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="1dp"
+            android:id="@+id/save_trip_button"
+            android:src="@drawable/ic_check_black_24dp"
+            android:background="#00000000"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/save_trip_icon_desc"
+            style="?android:attr/buttonBarButtonStyle" />
 
-
-                    <!-- DATES -->
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/trip_desc_input_field"
-                        android:layout_marginTop="32dp"
-                        android:id="@+id/date_names">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:padding="4dp"
-                            android:text="@string/start_date_text"
-                            android:gravity="center"
-                            android:textSize="18sp"
-                            android:background="#ffffff" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:padding="4dp"
-                            android:text="@string/end_date_text"
-                            android:gravity="center"
-                            android:textSize="18sp"
-                            android:background="#ffffff" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/date_names"
-                        style="?android:attr/buttonBarStyle">
-
-                        <Button
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="1dp"
-                            android:id="@+id/start_date_button"
-                            android:text="@string/default_date_text"
-                            android:background="#dddddd"
-                            android:textColor="#444444"
-                            style="?android:attr/buttonBarButtonStyle" />
-
-                        <Button
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="1dp"
-                            android:id="@+id/end_date_button"
-                            android:text="@string/default_date_text"
-                            android:background="#dddddd"
-                            android:textColor="#444444"
-                            style="?android:attr/buttonBarButtonStyle" />
-
-                    </LinearLayout>
-
-                </RelativeLayout>
-        </ScrollView>
+    </LinearLayout>
 
 </RelativeLayout>

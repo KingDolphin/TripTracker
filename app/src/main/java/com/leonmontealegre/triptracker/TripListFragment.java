@@ -20,8 +20,6 @@ import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
-import com.backendless.async.callback.AsyncCallback;
-import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
 
 import java.util.ArrayList;
@@ -31,6 +29,8 @@ import java.util.List;
 public class TripListFragment extends ListFragment {
 
     public static final String TAG = "TripListFragment";
+
+    public static final int EDIT_TRIP_REQUEST_CODE = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -88,6 +88,14 @@ public class TripListFragment extends ListFragment {
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e(TAG, "onActivityResult: " + requestCode + ", " + resultCode + ", " + data.getBooleanExtra("test", false));
+    }
+
+
+
     private void deleteTrip(final Trip trip) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this.getActivity());
         alert.setIcon(R.drawable.ic_warning_black_24dp);
@@ -101,6 +109,12 @@ public class TripListFragment extends ListFragment {
         });
         alert.setNegativeButton("No", null);
         alert.show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshTrips();
     }
 
     @Override
@@ -148,17 +162,26 @@ public class TripListFragment extends ListFragment {
                         popupMenu.getMenuInflater().inflate(R.menu.menu_popup_edit_trip, popupMenu.getMenu());
                         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             public boolean onMenuItemClick(MenuItem item) {
+                                Intent i;
                                 switch (item.getItemId()) {
                                     case R.id.menu_item_edit_trip:
-                                        Intent i = new Intent(TripListFragment.this.getActivity(), EditTripActivity.class);
-                                        startActivity(i);
-                                        return true;
+                                        i = new Intent(TripListFragment.this.getActivity(), EditTripActivity.class);
+                                        break;
                                     case R.id.menu_item_delete_trip:
                                         deleteTrip(trip);
+                                        // TODO : Break and start intent for viewing trip
                                         return true;
                                     default:
                                         return false;
                                 }
+                                i.putExtra(Trip.NAME_EXTRA, trip.name);
+                                i.putExtra(Trip.DESC_EXTRA, trip.description);
+                                i.putExtra(Trip.CREATOR_EXTRA, trip.creatorName);
+                                i.putExtra(Trip.START_DATE_EXTRA, trip.startDate);
+                                i.putExtra(Trip.END_DATE_EXTRA, trip.endDate);
+                                i.putExtra(Trip.IS_PUBLIC_EXTRA, trip.isPublic);
+                                startActivityForResult(i, EDIT_TRIP_REQUEST_CODE);
+                                return true;
                             }
                         });
                         popupMenu.show();
