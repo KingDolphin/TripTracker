@@ -1,6 +1,8 @@
 package com.leonmontealegre.triptracker;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -50,33 +52,37 @@ public class EditTripActivity extends AppCompatActivity {
 
         isPublicCheckbox = (CheckBox)findViewById(R.id.is_public_checkbox);
 
-        String tripName = getIntent().getStringExtra(Trip.NAME_EXTRA);
-        String description = getIntent().getStringExtra(Trip.DESC_EXTRA);
-        String creatorName = getIntent().getStringExtra(Trip.CREATOR_EXTRA);
-        Date startDate = (Date)getIntent().getSerializableExtra(Trip.START_DATE_EXTRA);
-        Date endDate = (Date)getIntent().getSerializableExtra(Trip.END_DATE_EXTRA);
-        boolean isPublic = getIntent().getBooleanExtra(Trip.IS_PUBLIC_EXTRA, false);
+        trip = (Trip)getIntent().getSerializableExtra(Trip.TRIP_EXTRA);
 
-        trip = new Trip(tripName, creatorName, description, startDate, endDate, isPublic);
-
-        tripNameField.setText(tripName);
-        tripDescField.setText(description);
+        tripNameField.setText(trip.getName());
+        tripDescField.setText(trip.getDescription());
 
         Calendar cal = Calendar.getInstance();
-        cal.setTime(startDate);
+        cal.setTime(trip.getStartDate());
         startDateButton.setText(cal.get(Calendar.MONTH)+1 + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
-        cal.setTime(endDate);
+        cal.setTime(trip.getEndDate());
         endDateButton.setText(cal.get(Calendar.MONTH)+1 + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
 
-        isPublicCheckbox.setChecked(isPublic);
+        isPublicCheckbox.setChecked(trip.isPublic());
 
         saveTripButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                trip.name = tripNameField.getText().toString();
-                trip.description = tripDescField.getText().toString();
-                trip.isPublic = isPublicCheckbox.isChecked();
-                getIntent().putExtra("test", true);
+                trip.setName(tripNameField.getText().toString());
+                trip.setDescription(tripDescField.getText().toString());
+                trip.setPublic(isPublicCheckbox.isChecked());
+                Intent data = new Intent();
+                data.putExtra("TRIP", trip);
+                if (getParent() == null)
+                    setResult(Activity.RESULT_OK, data);
+                else
+                    getParent().setResult(Activity.RESULT_OK, data);
+                finish();
+            }
+        });
+        cancelTripButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 finish();
             }
         });
@@ -89,10 +95,10 @@ public class EditTripActivity extends AppCompatActivity {
                 Calendar cal = Calendar.getInstance();
                 cal.set(year, month, day);
                 if (settingStartDate) {
-                    trip.startDate = cal.getTime();
+                    trip.setStartDate(cal.getTime());
                     startDateButton.setText(month + "/" + day + "/" + year);
                 } else if (settingEndDate) {
-                    trip.endDate = cal.getTime();
+                    trip.setEndDate(cal.getTime());
                     endDateButton.setText(month + "/" + day + "/" + year);
                 }
                 settingStartDate = settingEndDate = false;
@@ -109,7 +115,7 @@ public class EditTripActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 settingStartDate = true;
-                datePicker.setDate(trip.startDate);
+                datePicker.setDate(trip.getStartDate());
                 FragmentManager fragManager = getSupportFragmentManager();
                 datePicker.show(fragManager, "datePicker");
             }
@@ -119,7 +125,7 @@ public class EditTripActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 settingEndDate = true;
-                datePicker.setDate(trip.endDate);
+                datePicker.setDate(trip.getEndDate());
                 FragmentManager fragManager = getSupportFragmentManager();
                 datePicker.show(fragManager, "datePicker");
             }

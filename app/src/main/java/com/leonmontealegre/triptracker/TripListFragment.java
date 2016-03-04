@@ -1,5 +1,6 @@
 package com.leonmontealegre.triptracker;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,7 +45,7 @@ public class TripListFragment extends ListFragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addTrip(new Trip());
+                saveTrip(new Trip());
                 refreshTrips();
             }
         });
@@ -53,20 +54,34 @@ public class TripListFragment extends ListFragment {
     }
 
     private void refreshTrips() {
+        final List<Trip> list = new ArrayList<Trip>();
         BackendlessDataQuery query = new BackendlessDataQuery();
-        query.setWhereClause("isPublic = True OR ownerId='"+User.getUserID()+"'");
+        query.setWhereClause("ownerId = '"+User.getUserID()+"'");
         Backendless.Data.of(Trip.class).find(query, new LoadingCallback<BackendlessCollection<Trip>>(this.getActivity(), "Loading...") {
             @Override
             public void handleResponse(BackendlessCollection<Trip> trips) {
                 super.handleResponse(trips);
-                TripListAdapter adapter = new TripListAdapter(trips.getTotalObjects() > 0 ? trips.getCurrentPage() : new ArrayList<Trip>());
-                setListAdapter(adapter);
-                setHasOptionsMenu(true);
+                list.addAll(trips.getCurrentPage());
+                list.add(null);
+
+                BackendlessDataQuery query2 = new BackendlessDataQuery();
+                query2.setWhereClause("isPublic = True AND ownerId != '"+User.getUserID()+"'");
+                Backendless.Data.of(Trip.class).find(query2, new LoadingCallback<BackendlessCollection<Trip>>(getActivity(), "Loading...") {
+                    @Override
+                    public void handleResponse(BackendlessCollection<Trip> trips) {
+                        super.handleResponse(trips);
+                        list.addAll(trips.getCurrentPage());
+
+                        TripListAdapter adapter = new TripListAdapter(list);
+                        setListAdapter(adapter);
+                        setHasOptionsMenu(true);
+                    }
+                });
             }
         });
     }
 
-    public void addTrip(Trip trip) {
+    public void saveTrip(Trip trip) {
         Backendless.Data.of(Trip.class).save(trip, new LoadingCallback<Trip>(getActivity(), "Creating...") {
             @Override
             public void handleResponse(Trip response) {
@@ -90,11 +105,14 @@ public class TripListFragment extends ListFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.e(TAG, "onActivityResult: " + requestCode + ", " + resultCode + ", " + data.getBooleanExtra("test", false));
+        if (resultCode == Activity.RESULT_CANCELED)
+            return;
+
+        if (requestCode == EDIT_TRIP_REQUEST_CODE) {
+            Trip trip = (Trip)data.getSerializableExtra(Trip.TRIP_EXTRA);
+            saveTrip(trip);
+        }
     }
-
-
 
     private void deleteTrip(final Trip trip) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this.getActivity());
@@ -136,61 +154,63 @@ public class TripListFragment extends ListFragment {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            if (convertView == null)
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_trip, null);
-
             final Trip trip = getItem(position);
 
-            TextView nameTextView = (TextView)convertView.findViewById(R.id.trip_name_text);
-            nameTextView.setText(trip.name);
+            if (trip == null) {
+                if (convertView == null)
+                    convertView = getActivity().getLayoutInflater().inflate(R.layout.list_separator, null);
 
-            TextView creatorTextView = (TextView)convertView.findViewById(R.id.trip_creator_text);
-            String defaultText = getResources().getText(R.string.default_trip_creator_text).toString();
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(trip.startDate);
-            int year = cal.get(Calendar.YEAR);
-            int month = cal.get(Calendar.MONTH)+1;
-            int day = cal.get(Calendar.DAY_OF_MONTH);
-            creatorTextView.setText(defaultText.replace("{USER}", trip.creatorName).replace("{DATE}", month + "/" + day + "/" + year));
-
-            final ImageButton editButton = (ImageButton)convertView.findViewById(R.id.trip_edit_button);
-            if (User.getUsername().equals(trip.creatorName)) {
-                editButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        PopupMenu popupMenu = new PopupMenu(TripListFragment.this.getActivity(), editButton);
-                        popupMenu.getMenuInflater().inflate(R.menu.menu_popup_edit_trip, popupMenu.getMenu());
-                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            public boolean onMenuItemClick(MenuItem item) {
-                                Intent i;
-                                switch (item.getItemId()) {
-                                    case R.id.menu_item_edit_trip:
-                                        i = new Intent(TripListFragment.this.getActivity(), EditTripActivity.class);
-                                        break;
-                                    case R.id.menu_item_delete_trip:
-                                        deleteTrip(trip);
-                                        // TODO : Break and start intent for viewing trip
-                                        return true;
-                                    default:
-                                        return false;
-                                }
-                                i.putExtra(Trip.NAME_EXTRA, trip.name);
-                                i.putExtra(Trip.DESC_EXTRA, trip.description);
-                                i.putExtra(Trip.CREATOR_EXTRA, trip.creatorName);
-                                i.putExtra(Trip.START_DATE_EXTRA, trip.startDate);
-                                i.putExtra(Trip.END_DATE_EXTRA, trip.endDate);
-                                i.putExtra(Trip.IS_PUBLIC_EXTRA, trip.isPublic);
-                                startActivityForResult(i, EDIT_TRIP_REQUEST_CODE);
-                                return true;
-                            }
-                        });
-                        popupMenu.show();
-                    }
-                });
+                TextView separatorText = (TextView)convertView.findViewById(R.id.separator_text);
+                separatorText.setText("TEST");
             } else {
-                editButton.setVisibility(View.GONE);
-            }
+                if (convertView == null)
+                    convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_trip, null);
 
+                TextView nameTextView = (TextView) convertView.findViewById(R.id.trip_name_text);
+                nameTextView.setText(trip.getName());
+
+                TextView creatorTextView = (TextView) convertView.findViewById(R.id.trip_creator_text);
+                String defaultText = getResources().getText(R.string.default_trip_creator_text).toString();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(trip.getStartDate());
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH) + 1;
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                creatorTextView.setText(defaultText.replace("{USER}", trip.getCreatorName()).replace("{DATE}", month + "/" + day + "/" + year));
+
+                final ImageButton editButton = (ImageButton) convertView.findViewById(R.id.trip_edit_button);
+                if (User.getUsername().equals(trip.getCreatorName())) {
+                    editButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            PopupMenu popupMenu = new PopupMenu(TripListFragment.this.getActivity(), editButton);
+                            popupMenu.getMenuInflater().inflate(R.menu.menu_popup_edit_trip, popupMenu.getMenu());
+                            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    Intent i;
+                                    switch (item.getItemId()) {
+                                        case R.id.menu_item_edit_trip:
+                                            i = new Intent(TripListFragment.this.getActivity(), EditTripActivity.class);
+                                            break;
+                                        case R.id.menu_item_delete_trip:
+                                            deleteTrip(trip);
+                                            // TODO : Break and start intent for viewing trip
+                                            return true;
+                                        default:
+                                            return false;
+                                    }
+                                    i.putExtra(Trip.TRIP_EXTRA, trip);
+                                    startActivityForResult(i, EDIT_TRIP_REQUEST_CODE);
+                                    return true;
+                                }
+                            });
+                            popupMenu.show();
+                        }
+                    });
+                } else {
+                    editButton.setVisibility(View.GONE);
+                }
+            }
             return convertView;
         }
     }

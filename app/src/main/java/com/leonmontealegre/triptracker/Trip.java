@@ -1,22 +1,21 @@
 package com.leonmontealegre.triptracker;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Trip {
+public class Trip implements Serializable {
 
-    public static final String NAME_EXTRA = "TRIP_NAME";
-    public static final String CREATOR_EXTRA = "TRIP_CREATOR_NAME";
-    public static final String DESC_EXTRA = "TRIP_DESCRIPTION";
-    public static final String START_DATE_EXTRA = "TRIP_START_DATE";
-    public static final String END_DATE_EXTRA = "TRIP_END_DATE";
-    public static final String IS_PUBLIC_EXTRA = "TRIP_IS_PUBLIC";
+    private static final long serialVersionUID = -39746785349320499L;
 
-    public String name;
-    public String creatorName;
-    public String description;
-    public Date startDate;
-    public Date endDate;
-    public boolean isPublic;
+    public static final transient String TRIP_EXTRA = "TRIP";
+
+    private String name;
+    private String creatorName;
+    private String description;
+    private Date startDate;
+    private Date endDate;
+    private boolean isPublic;
+    private String objectId;
 
     public Trip(String name, String creatorName, String description, Date startDate, Date endDate, boolean isPublic) {
         this.name = name;
@@ -29,6 +28,58 @@ public class Trip {
 
     public Trip() {
         this("New Trip", User.getUsername(), "A new trip.", new Date(), new Date(), false);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public String getObjectId() {
+        return objectId;
     }
 
     @Override
