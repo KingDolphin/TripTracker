@@ -46,7 +46,6 @@ public class TripListFragment extends ListFragment {
             @Override
             public void onClick(View view) {
                 saveTrip(new Trip());
-                refreshTrips();
             }
         });
 
@@ -54,18 +53,20 @@ public class TripListFragment extends ListFragment {
     }
 
     private void refreshTrips() {
-        final List<Trip> list = new ArrayList<Trip>();
+        final List list = new ArrayList();
         BackendlessDataQuery query = new BackendlessDataQuery();
         query.setWhereClause("ownerId = '"+User.getUserID()+"'");
         Backendless.Data.of(Trip.class).find(query, new LoadingCallback<BackendlessCollection<Trip>>(this.getActivity(), "Loading...") {
             @Override
             public void handleResponse(BackendlessCollection<Trip> trips) {
                 super.handleResponse(trips);
-                list.addAll(trips.getCurrentPage());
-                list.add(null);
+                List myTrips = trips.getCurrentPage();
+                list.add(getResources().getText(R.string.trip_list_my_trips).toString());
+                list.addAll(myTrips);
+                list.add(getResources().getText(R.string.trip_list_all_trips).toString());
 
                 BackendlessDataQuery query2 = new BackendlessDataQuery();
-                query2.setWhereClause("isPublic = True AND ownerId != '"+User.getUserID()+"'");
+                query2.setWhereClause("public = True AND ownerId != '"+User.getUserID()+"'");
                 Backendless.Data.of(Trip.class).find(query2, new LoadingCallback<BackendlessCollection<Trip>>(getActivity(), "Loading...") {
                     @Override
                     public void handleResponse(BackendlessCollection<Trip> trips) {
@@ -137,37 +138,51 @@ public class TripListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-//        FamilyMember f = ((FamilyMemberAdapter)getListAdapter()).getItem(position);
-//        Log.d(TAG, f.toString() + " was clicked. " + FamilyMemberActivity.class + " AT POSITION : " + position);
-//        Intent i = new Intent(getActivity(), FamilyMemberActivity.class);
-//        Log.d(TAG, "RELATION : " + f.getRelation() + ", " + position);
-//        i.putExtra(FamilyMember.RELATION_KEY, f.getRelation());
-//        i.putExtra(FamilyMember.INDEX_KEY, position);
-//        startActivity(i);
-        Log.d(TAG, "List item at index " + position + " was clicked");
+        Object item = getListAdapter().getItem(position);
+        Log.d(TAG, "onListItemClick: " + position);
+        if (item instanceof Trip) {
+            Trip trip = (Trip)item;
+
+            Intent i = new Intent(this.getActivity(), ViewTripActivity.class);
+            i.putExtra(Trip.TRIP_EXTRA, trip);
+            startActivity(i);
+        }
     }
 
-    private class TripListAdapter extends ArrayAdapter<Trip> {
-        public TripListAdapter(List<Trip> trips) {
+    private class TripListAdapter extends ArrayAdapter {
+        public TripListAdapter(List trips) {
             super(getActivity(), 0, trips);
         }
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            final Trip trip = getItem(position);
+            Object item = getItem(position);
 
-            if (trip == null) {
+            if (item instanceof String) {       // Separator
+                final String title = (String)item;
+
                 if (convertView == null)
                     convertView = getActivity().getLayoutInflater().inflate(R.layout.list_separator, null);
 
-                TextView separatorText = (TextView)convertView.findViewById(R.id.separator_text);
-                separatorText.setText("TEST");
-            } else {
+                TextView separatorText = (TextView) convertView.findViewById(R.id.separator_text);
+                separatorText.setText(title);
+            } else if (item instanceof Trip) {  // Trip
+                final Trip trip = (Trip)item;
+
                 if (convertView == null)
                     convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_trip, null);
 
                 TextView nameTextView = (TextView) convertView.findViewById(R.id.trip_name_text);
                 nameTextView.setText(trip.getName());
+                nameTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(TripListFragment.this.getActivity(), ViewTripActivity.class);
+                        i.putExtra(Trip.TRIP_EXTRA, trip);
+                        startActivity(i);
+                    }
+                });
+                nameTextView.setSelected(true);
 
                 TextView creatorTextView = (TextView) convertView.findViewById(R.id.trip_creator_text);
                 String defaultText = getResources().getText(R.string.default_trip_creator_text).toString();
@@ -187,21 +202,18 @@ public class TripListFragment extends ListFragment {
                             popupMenu.getMenuInflater().inflate(R.menu.menu_popup_edit_trip, popupMenu.getMenu());
                             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                 public boolean onMenuItemClick(MenuItem item) {
-                                    Intent i;
                                     switch (item.getItemId()) {
                                         case R.id.menu_item_edit_trip:
-                                            i = new Intent(TripListFragment.this.getActivity(), EditTripActivity.class);
-                                            break;
+                                            Intent i = new Intent(TripListFragment.this.getActivity(), EditTripActivity.class);
+                                            i.putExtra(Trip.TRIP_EXTRA, trip);
+                                            startActivityForResult(i, EDIT_TRIP_REQUEST_CODE);
+                                            return true;
                                         case R.id.menu_item_delete_trip:
                                             deleteTrip(trip);
-                                            // TODO : Break and start intent for viewing trip
                                             return true;
                                         default:
                                             return false;
                                     }
-                                    i.putExtra(Trip.TRIP_EXTRA, trip);
-                                    startActivityForResult(i, EDIT_TRIP_REQUEST_CODE);
-                                    return true;
                                 }
                             });
                             popupMenu.show();

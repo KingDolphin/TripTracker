@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/colorPrimaryLight"
+    tools:context=".EditTripActivity">
+
+    <!-- NAME -->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/trip_name_text"
+        android:text="@string/trip_name_hint"
+        android:gravity="center"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="false"
+        android:scrollHorizontally="true"
+        android:singleLine="true" />
+
+
+    <!-- DESCRIPTION -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/trip_name_text"
+        android:layout_alignStart="@+id/trip_name_text"
+        android:layout_below="@+id/trip_name_text"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="48dp"
+        android:padding="8dp"
+        android:id="@+id/trip_desc_text"
+        android:text="@string/trip_desc_hint"
+        android:textSize="20sp"
+        android:gravity="top"
+        android:background="#dddddd"
+        android:lines="6" />
+
+
+    <!-- DATES -->
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/trip_desc_text"
+        android:layout_marginTop="32dp"
+        android:id="@+id/date_names">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="1dp"
+            android:padding="4dp"
+            android:text="@string/start_date_text"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:background="#ffffff" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="1dp"
+            android:padding="4dp"
+            android:text="@string/end_date_text"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:background="#ffffff" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/date_names"
+        android:id="@+id/date_buttons">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="1dp"
+            android:padding="20dp"
+            android:id="@+id/start_date_text"
+            android:text="@string/default_date_text"
+            android:gravity="center"
+            android:background="#dddddd"
+            android:textColor="#444444" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="1dp"
+            android:padding="20dp"
+            android:id="@+id/end_date_text"
+            android:text="@string/default_date_text"
+            android:gravity="center"
+            android:background="#dddddd"
+            android:textColor="#444444" />
+
+    </LinearLayout>
+
+</RelativeLayout>

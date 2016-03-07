@@ -3,6 +3,7 @@
     <string name="registration_activity_name">Registration</string>
     <string name="trip_list_activity_name">Trips</string>
     <string name="edit_trip_activity_name">Edit Trip</string>
+    <string name="view_trip_activity_name">View Trip</string>
 
     <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>
@@ -30,6 +31,9 @@
     <string name="help_text">Help</string>
     <string name="settings_text">Settings</string>
     <string name="logout_text">Logout</string>
+
+    <string name="trip_list_my_trips">My Trips</string>
+    <string name="trip_list_all_trips">Public Trips</string>
 
     <string name="icon_desc">The icon for the app</string>
     <string name="name_icon_desc">The icon for name</string>
